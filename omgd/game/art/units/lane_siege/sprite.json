@@ -1,0 +1,64 @@
+{
+ "content_id": "lane_siege",
+ "facing": "right",
+ "animations": {
+  "idle": {
+   "cell": [
+    138,
+    182
+   ],
+   "anchor": [
+    64.0,
+    180.0
+   ],
+   "loop": true,
+   "durations_ms": [
+    83,
+    84,
+    83,
+    83,
+    83,
+    84,
+    83,
+    83,
+    84,
+    83,
+    83,
+    84,
+    83,
+    83,
+    83,
+    84,
+    83,
+    83,
+    84,
+    83,
+    83,
+    83,
+    84,
+    83
+   ],
+   "pages": [
+    {
+     "file": "idle-atlas-00.png",
+     "first": 0,
+     "count": 24,
+     "columns": 8
+    }
+   ],
+   "events": [
+    {
+     "name": "in",
+     "atMs": 0,
+     "frame": 0
+    },
+    {
+     "name": "end",
+     "atMs": 1083,
+     "frame": 13
+    }
+   ],
+   "body_height_px": 160.0
+  }
+ }
+}

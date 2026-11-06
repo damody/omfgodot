@@ -1,0 +1,26 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "sanada_yukimura",
+ "subject": "a young Sengoku-era Japanese spear warrior in crimson armor, full body",
+ "identity": "athletic young man entirely in bright crimson-red lacquered armor with gold edging; a crimson kabuto helmet with two short curved golden horns; a long crimson scarf trailing behind; white trousers tied at the shin, crimson shin guards; a cross-bladed jumonji yari spear with a three-pronged steel head, held diagonally forward in both hands",
+ "pose": "dynamic ready stance, feet apart and flat on the ground, spear angled forward",
+ "recap": "young Sengoku warrior in bright crimson and gold armor with short golden horns and a crimson scarf, holding a cross-bladed spear forward",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "hero",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "he",
+ "opaque_parts": "helmet, horns, armor, scarf, spear",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no magic effects",
+  "no ground shadow"
+ ]
+}

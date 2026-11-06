@@ -1,0 +1,62 @@
+{
+ "content_id": "lane_cavalry",
+ "facing": "right",
+ "animations": {
+  "idle": {
+   "cell": [
+    116,
+    178
+   ],
+   "anchor": [
+    47.5,
+    176.0
+   ],
+   "loop": true,
+   "durations_ms": [
+    83,
+    84,
+    83,
+    83,
+    84,
+    83,
+    83,
+    84,
+    83,
+    83,
+    84,
+    83,
+    83,
+    83,
+    84,
+    83,
+    83,
+    84,
+    83,
+    83,
+    84,
+    83
+   ],
+   "pages": [
+    {
+     "file": "idle-atlas-00.png",
+     "first": 0,
+     "count": 22,
+     "columns": 8
+    }
+   ],
+   "events": [
+    {
+     "name": "in",
+     "atMs": 0,
+     "frame": 0
+    },
+    {
+     "name": "end",
+     "atMs": 1000,
+     "frame": 12
+    }
+   ],
+   "body_height_px": 160.0
+  }
+ }
+}

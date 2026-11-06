@@ -1,0 +1,4 @@
+The attached image is an exact top-down layout guide for a MOBA battlefield. Repaint it as finished game terrain seen from straight above, keeping every shape in exactly the same position and size.
+Mapping: tan bands become packed dirt roads; green becomes grass meadow; dark grey rectangles become solid rocky cliffs with hard edges; dark green rectangles become tall grass thickets; blue bands become a shallow river; the darker green areas become forest floor.
+Style: painterly hand-illustrated Sengoku-era Japanese countryside, soft warm light from the upper left, readable and low in contrast so that characters stand out.
+Do not move, resize, add or remove any road, cliff, thicket or river. No buildings, no characters, no text, no letters, no UI, no border, no grid, no perspective tilt.

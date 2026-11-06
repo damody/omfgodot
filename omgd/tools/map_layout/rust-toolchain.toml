@@ -1,0 +1,6 @@
+# Must match scripts workspace toolchain — abi_stable requires both sides
+# compile with the same rustc version.
+[toolchain]
+channel = "1.95.0"
+components = ["rustc", "cargo", "rust-std"]
+profile = "minimal"

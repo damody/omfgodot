@@ -1,0 +1,26 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "honda_tadakatsu",
+ "subject": "a towering Sengoku-era Japanese spear general, full body",
+ "identity": "tall stern man in matte black lacquered armor; a black kabuto helmet with two large branching deer antlers; a sash of large wooden prayer beads across the chest from shoulder to hip; dark grey trousers, black shin guards; a very long straight yari spear with a narrow steel blade, held upright in the right hand with its butt on the ground",
+ "pose": "upright unshakable stance, feet apart and flat on the ground, spear standing vertical",
+ "recap": "tall Sengoku general in black armor with a large deer-antler helmet and a prayer-bead sash, holding a very long straight spear upright",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "hero",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "he",
+ "opaque_parts": "antlers, helmet, armor, prayer beads, spear",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no magic effects",
+  "no ground shadow"
+ ]
+}

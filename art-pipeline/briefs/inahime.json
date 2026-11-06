@@ -1,0 +1,26 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "inahime",
+ "subject": "a Sengoku-era Japanese warrior woman archer, full body",
+ "identity": "agile adult woman with a very long high black ponytail; a forest-green short kimono under a light dark-leather chest guard with a violet cord; violet arm guards, dark green hakama trousers tied at the shin, straw sandals; a very tall black asymmetric yumi bow held in the left hand, a green-fletched quiver on the back",
+ "pose": "composed stance, feet apart and flat on the ground, bow held low and upright",
+ "recap": "agile Sengoku archer woman with a long high black ponytail, forest-green kimono, dark leather guard with violet cords, holding a very tall black bow",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "hero",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "she",
+ "opaque_parts": "hair, chest guard, bow, quiver",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no magic effects",
+  "no ground shadow"
+ ]
+}

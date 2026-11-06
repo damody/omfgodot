@@ -1,0 +1,26 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "tamako",
+ "subject": "a Sengoku-era Japanese noble woman archer, full body",
+ "identity": "graceful young woman with a chin-length straight black bob and a thin golden hair ornament; a midnight-blue short kimono with a scattered pattern of small golden stars, a golden obi sash; pale cream hakama trousers, white tabi socks and sandals; a tall pale ivory-white yumi bow with golden tips held in the left hand, a white-fletched quiver at the hip",
+ "pose": "elegant stance, feet apart and flat on the ground, bow held low and upright",
+ "recap": "graceful Sengoku noble archer with a black bob, midnight-blue kimono with small golden stars and a golden sash, holding a tall ivory-white bow",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "hero",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "she",
+ "opaque_parts": "hair, kimono, sash, bow",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no magic effects",
+  "no ground shadow"
+ ]
+}

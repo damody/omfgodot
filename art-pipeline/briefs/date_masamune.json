@@ -1,0 +1,26 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "date_masamune",
+ "subject": "a one-eyed Sengoku-era Japanese samurai lord with a katana, full body",
+ "identity": "lean young man wearing a black round eyepatch over the right eye; black lacquered armor with gold trim; a black kabuto helmet with one tall thin golden crescent moon crest; a short deep-blue battle coat with a high collar; black trousers, armored shin guards; a single curved katana held in the right hand, blade pointing low and forward",
+ "pose": "alert forward-leaning stance, feet apart and flat on the ground, katana held low",
+ "recap": "one-eyed Sengoku lord in black and gold armor with a tall golden crescent helmet crest and a deep-blue coat, holding a katana",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "hero",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "he",
+ "opaque_parts": "helmet, crest, eyepatch, armor, katana",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no magic effects",
+  "no ground shadow"
+ ]
+}

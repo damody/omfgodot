@@ -1,0 +1,17 @@
+config_version=5
+
+[application]
+
+config/name="omoba-gd"
+config/features=PackedStringArray("4.7")
+run/main_scene="res://main/match.tscn"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=1
+
+[importer_defaults]
+
+texture={
+"mipmaps/generate": true
+}

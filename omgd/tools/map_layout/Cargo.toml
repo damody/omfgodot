@@ -1,0 +1,11 @@
+[package]
+name = "map_layout"
+version = "0.1.0"
+edition = "2021"
+description = "Dump a compiled MOBA map's public geometry as JSON for art and overlay checks"
+
+[dependencies]
+omoba-template-ids = { path = "../../../../omoba-template-ids", features = ["compiled-content-only"] }
+serde_json = "1"
+
+[workspace]

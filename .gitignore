@@ -1,0 +1,14 @@
+# Build output
+omgd/om_godot/target/
+omgd/tools/map_layout/target/
+omgd/game/bin/*.dll
+*.pdb
+# Godot import cache
+omgd/game/.godot/
+# Art pipeline local state (raw takes, venv, vendored forge)
+art-pipeline/.venv/
+art-pipeline/forge/
+art-pipeline/.forge/
+art-pipeline/work/
+__pycache__/
+*.log

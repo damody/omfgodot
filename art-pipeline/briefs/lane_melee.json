@@ -1,0 +1,23 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "lane_melee",
+ "subject": "a Sengoku-era Japanese foot soldier with a spear, full body",
+ "identity": "stocky ashigaru footman in a plain dark iron jingasa hat, simple dull-iron chest plate over a faded grey-brown tunic, tied shin guards, straw sandals, holding a long yari spear angled forward in both hands",
+ "pose": "ready stance, feet apart and flat on the ground",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "mob",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "they",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no ground shadow"
+ ]
+}

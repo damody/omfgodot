@@ -1,0 +1,106 @@
+{
+ "content_id": "lane_melee",
+ "facing": "right",
+ "animations": {
+  "idle": {
+   "cell": [
+    162,
+    162
+   ],
+   "anchor": [
+    43.0,
+    161.0
+   ],
+   "loop": true,
+   "durations_ms": [
+    83,
+    84,
+    83,
+    83,
+    84,
+    83,
+    84,
+    83,
+    83,
+    84,
+    83,
+    83,
+    84,
+    83
+   ],
+   "pages": [
+    {
+     "file": "idle-atlas-00.png",
+     "first": 0,
+     "count": 14,
+     "columns": 8
+    }
+   ],
+   "events": [
+    {
+     "name": "in",
+     "atMs": 0,
+     "frame": 0
+    },
+    {
+     "name": "end",
+     "atMs": 667,
+     "frame": 8
+    }
+   ],
+   "body_height_px": 160.0
+  },
+  "attack": {
+   "cell": [
+    362,
+    162
+   ],
+   "anchor": [
+    69.0,
+    161.0
+   ],
+   "loop": false,
+   "durations_ms": [
+    83,
+    84,
+    83,
+    83,
+    84,
+    83,
+    83,
+    84
+   ],
+   "pages": [
+    {
+     "file": "attack-atlas-00.png",
+     "first": 0,
+     "count": 8,
+     "columns": 8
+    }
+   ],
+   "events": [
+    {
+     "name": "in",
+     "atMs": 0,
+     "frame": 0
+    },
+    {
+     "name": "hit",
+     "atMs": 250,
+     "frame": 3
+    },
+    {
+     "name": "cancel",
+     "atMs": 417,
+     "frame": 5
+    },
+    {
+     "name": "end",
+     "atMs": 667,
+     "frame": 7
+    }
+   ],
+   "body_height_px": 160.0
+  }
+ }
+}

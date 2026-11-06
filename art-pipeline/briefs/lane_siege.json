@@ -1,0 +1,23 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "lane_siege",
+ "subject": "a small Sengoku-era Japanese wheeled bronze cannon pushed by one soldier, full body",
+ "identity": "low wooden two-wheel gun carriage with a short bronze cannon barrel pointing forward, one ashigaru in a plain jingasa hat standing behind it with both hands on the carriage",
+ "pose": "stationary, wheels and feet on the ground",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "mob",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "they",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no ground shadow"
+ ]
+}

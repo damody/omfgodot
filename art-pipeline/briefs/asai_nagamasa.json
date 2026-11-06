@@ -1,0 +1,26 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "asai_nagamasa",
+ "subject": "a noble young Sengoku-era Japanese swordsman, full body",
+ "identity": "slender handsome young man with a tied black ponytail and no helmet; polished silver-white lamellar armor with teal lacing; a teal sleeveless jinbaori surcoat over the armor; pale grey hakama trousers, white tabi socks and sandals; one very long odachi greatsword with a plain steel blade, held low in both hands with the tip behind him",
+ "pose": "calm iaido-like stance, feet apart and flat on the ground, long sword trailing low",
+ "recap": "slender young Sengoku swordsman with a black ponytail, silver-white armor with teal lacing and a teal surcoat, holding a very long greatsword low",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "hero",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "he",
+ "opaque_parts": "hair, armor, surcoat, sword",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no magic effects",
+  "no ground shadow"
+ ]
+}

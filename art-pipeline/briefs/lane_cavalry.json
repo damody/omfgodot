@@ -1,0 +1,23 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "lane_cavalry",
+ "subject": "a Sengoku-era Japanese mounted samurai on horseback, full body",
+ "identity": "armored rider in dull-iron lamellar with a plain kabuto helmet on a sturdy dark bay horse with simple tack, holding a short spear upright",
+ "pose": "horse standing with all four hooves flat on the ground",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "mob",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "they",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no ground shadow"
+ ]
+}

@@ -1,0 +1,26 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "murakami_yoshikiyo",
+ "subject": "a huge Sengoku-era Japanese warlord with a great battle axe, full body",
+ "identity": "massive broad-shouldered older man with a thick black beard and bare muscular arms, a low round iron kabuto helmet, heavy earth-brown lamellar chest armor with bronze plates, wide bronze shoulder guards, dark trousers tied at the shin, armored boots; an oversized two-handed ono battle axe with a wide bronze blade, held low in both hands",
+ "pose": "heavy planted stance, feet wide apart and flat on the ground, axe head resting low in front",
+ "recap": "huge bearded Sengoku warlord in earth-brown and bronze armor with a round iron helmet, carrying an oversized bronze battle axe",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "hero",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "he",
+ "opaque_parts": "beard, helmet, armor, axe",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no magic effects",
+  "no ground shadow"
+ ]
+}

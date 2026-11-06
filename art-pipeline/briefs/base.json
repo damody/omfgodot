@@ -1,0 +1,22 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "base",
+ "subject": "a Sengoku-era Japanese castle keep, full structure",
+ "identity": "compact three-tier castle keep with white plaster walls, dark curved tiled roofs and a heavy cut-stone base, no flags",
+ "facing": "none",
+ "view": "three-quarter view from a raised camera",
+ "class": "prop",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no characters",
+  "no ground",
+  "no ground shadow"
+ ]
+}

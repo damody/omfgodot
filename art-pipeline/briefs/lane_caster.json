@@ -1,0 +1,23 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "lane_caster",
+ "subject": "a Sengoku-era Japanese archer, full body",
+ "identity": "lean ashigaru archer in a plain jingasa hat, light dull-iron chest plate over a faded grey-brown tunic, tied shin guards, straw sandals, a tall asymmetric yumi bow in the left hand and a quiver at the hip",
+ "pose": "relaxed stance with the bow held low, feet apart and flat on the ground",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "mob",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "they",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no ground shadow"
+ ]
+}

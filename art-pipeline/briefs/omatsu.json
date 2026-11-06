@@ -1,0 +1,26 @@
+{
+ "schema": "generate2dsprite.master_spec.v1",
+ "name": "omatsu",
+ "subject": "a Sengoku-era Japanese noble ice sorceress, full body",
+ "identity": "poised adult woman with black hair in a tall formal updo held by icy-blue crystal hairpins; a pale ice-blue and white layered kimono with a pattern of large white snowflake flowers, a deep navy obi sash; hem reaching the ankles, white tabi socks and sandals; one open silver-blue tessen war fan held out low in the right hand",
+ "pose": "poised stance, feet apart and flat on the ground under the kimono hem, open fan held low",
+ "recap": "poised Sengoku noblewoman with a black updo and icy crystal pins, pale ice-blue and white snowflake kimono with a navy sash, holding an open silver-blue war fan",
+ "facing": "right",
+ "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+ "class": "hero",
+ "finish": "hd",
+ "genre": "for a top-down fantasy MOBA game",
+ "pronoun": "she",
+ "opaque_parts": "hair, hairpins, kimono, sash, fan",
+ "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+ "style_ref": {
+  "path": "../work/saika/master/master.png",
+  "what": "an approved hero sprite from the same game",
+  "do_not_copy": "his face, armor colours or rifle"
+ },
+ "extra_bans": [
+  "no smoke",
+  "no magic effects",
+  "no ground shadow"
+ ]
+}

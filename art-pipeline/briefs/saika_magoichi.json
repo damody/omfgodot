@@ -1,0 +1,17 @@
+{
+  "schema": "generate2dsprite.master_spec.v1",
+  "name": "saika_magoichi",
+  "subject": "a Sengoku-era Japanese mercenary gunner, full body",
+  "identity": "lean adult man with a sharp jaw, short black topknot and a crimson cloth headband; dark indigo lacquered lamellar chest armor with crimson lacing, short layered shoulder guards, charcoal hakama trousers tied at the shin, straw sandals; a long wooden tanegashima matchlock rifle with brass fittings held in both hands, angled low across the body; a leather powder pouch and a coiled slow-match cord on the belt",
+  "pose": "relaxed ready stance, feet shoulder width apart and flat on the ground, rifle held low",
+  "recap": "lean Sengoku-era gunner with a black topknot and crimson headband, dark indigo lamellar armor with crimson lacing, charcoal hakama, straw sandals, holding a long wooden matchlock rifle with brass fittings",
+  "facing": "right",
+  "view": "side view (profile to three-quarter), seen from a slightly raised camera",
+  "class": "hero",
+  "finish": "hd",
+  "genre": "for a top-down fantasy MOBA game",
+  "pronoun": "he",
+  "opaque_parts": "hair, headband, armor, rifle",
+  "extra": "Painterly hand-illustrated game sprite: bold readable silhouette at small size, clean dark outline, simple cel shading with one warm light from the upper left.",
+  "extra_bans": ["no smoke", "no muzzle flash", "no ground shadow"]
+}
