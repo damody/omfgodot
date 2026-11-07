@@ -11,18 +11,19 @@ const LUNGE_DISTANCE := 0.3
 const FALL_SECONDS := 0.7
 const CROSSFADE_SECONDS := 0.15
 const HIT_FLASH_SECONDS := 0.18
-const HIT_TINT := 0.45
+const HIT_TINT := 0.6
 
 var _unit: Dictionary = {}
 var _right := true
 var _fired := false
 var _xray: AnimatedSprite3D
+var _occluded := false
 var _procedural := ""
 var _procedural_clock := 0.0
 var _flash: Tween
 
 
-## A faint copy drawn over everything, so a unit behind a building still reads.
+## A faint copy drawn over everything, so a unit behind a building still reads; see set_occluded.
 func enable_xray() -> void:
 	_xray = AnimatedSprite3D.new()
 	_xray.sprite_frames = sprite_frames
@@ -33,7 +34,16 @@ func enable_xray() -> void:
 	_xray.shaded = false
 	_xray.modulate = Color(0.55, 0.75, 1.0, 0.28)
 	_xray.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_xray.visible = false
 	add_child(_xray)
+
+
+## Shows the x-ray copy only while something stands between the unit and the camera: drawn
+## all the time it ghosts over every unit in front and blinks as they pass.
+func set_occluded(occluded: bool) -> void:
+	_occluded = occluded
+	if _xray != null:
+		_xray.visible = occluded and animation != &"death"
 
 
 func setup(content_id: String, height_units: float) -> bool:
@@ -62,7 +72,7 @@ func play_slot(slot: String) -> void:
 	position = Vector3.ZERO
 	modulate.a = 1.0
 	if _xray != null:
-		_xray.visible = slot != "death"
+		_xray.visible = _occluded and slot != "death"
 	if slot == "cast" and not sprite_frames.has_animation(slot):
 		slot = "attack"
 	# A walk toward or away from the camera falls back to the side walk.

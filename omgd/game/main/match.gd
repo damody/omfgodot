@@ -6,6 +6,16 @@ const CORPSE_SECONDS := 1.5
 const VIEW_TURN_SIN := 0.77
 ## |sin(facing)| bounds of the diagonal walks: sin 22.5 and sin 67.5 degrees.
 const DIAGONAL_SIN := Vector2(0.383, 0.924)
+## |cos(facing)| below which a unit keeps the side it faces: walking straight up or down, the heading
+## wobbles across vertical and the sprite would mirror every tick.
+const FLIP_DEAD_COS := 0.2
+## Frames land between backend ticks, so a walker would hold, then jump two ticks, and a camera
+## following it judders the whole screen. Bodies chase their backend spot at this rate (per second);
+## past SNAP_DISTANCE (a blink or a respawn) they jump there.
+const SMOOTH_RATE := 18.0
+const SNAP_DISTANCE := 2.0
+## A prop hides what stands behind it up to this many times its height (camera pitch 19 over 15).
+const COVER_DEPTH := 1.27
 ## Half the ground the default camera shows around its focus (x across, z toward the bottom edge).
 const CAMERA_VIEW_INSET := Vector3(6.5, 0, 3.5)
 const KIND_HERO := 1
@@ -30,6 +40,11 @@ const WALL_HEIGHT := 1.0
 const CAMERA_OFFSET := Vector3(0, 19.0, 15.0)
 const CAMERA_PAN_SPEED := 30.0
 const CAMERA_EDGE_PX := 12.0
+## Ground units per screen pixel of a middle-button drag at zoom 1 (fov 30 at 24 units away, 720 px tall).
+const CAMERA_DRAG_SCALE := 0.018
+const CLICK_MARK_SECONDS := 0.35
+const COLOR_CLICK_MOVE := Color(0.35, 1.0, 0.45)
+const COLOR_CLICK_ATTACK := Color(1.0, 0.3, 0.25)
 const ZOOM_RANGE := Vector2(0.5, 2.5)
 const PICK_RADIUS := 1.0
 const ABILITY_KEYS := {KEY_Q: 0, KEY_W: 1, KEY_E: 2, KEY_R: 3, KEY_D: 4, KEY_F: 5}
@@ -63,6 +78,14 @@ var camera_zoom := 1.0
 var edge_pan := true
 var focus_low := Vector3.ZERO
 var focus_high := Vector3.ZERO
+var camera_drag := false
+# Holding Space looks at the hero; letting go returns to the view from before.
+var space_view := Vector3.ZERO
+var space_follow := false
+var space_held := false
+# Ctrl pressed and let go with nothing else in between toggles the cursor lock.
+var ctrl_tap := false
+var cursor_locked := false
 var armed_attack_move := false
 var armed_ability := -1
 var unit_rows := PackedFloat32Array()
@@ -96,6 +119,8 @@ func _ready() -> void:
 				smoke.view = self
 				edge_pan = false
 				add_child(smoke)
+	if edge_pan:
+		_set_cursor_locked(true)
 	started_ms = Time.get_ticks_msec()
 	_build_stage()
 	if address.is_empty():
@@ -256,6 +281,7 @@ func _process(delta: float) -> void:
 		_sync_units()
 		fog.update_from(session.fog_cells(), session.fog_info())
 		hud.minimap.set_fog(session.fog_cells(), session.fog_info())
+	_smooth_units(delta)
 	_update_camera(delta)
 	_update_hud()
 	var now := Time.get_ticks_msec()
@@ -270,17 +296,29 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
-		match event.button_index:
-			MOUSE_BUTTON_WHEEL_UP: camera_zoom = clampf(camera_zoom * 0.9, ZOOM_RANGE.x, ZOOM_RANGE.y)
-			MOUSE_BUTTON_WHEEL_DOWN: camera_zoom = clampf(camera_zoom * 1.1, ZOOM_RANGE.x, ZOOM_RANGE.y)
-			MOUSE_BUTTON_RIGHT: _on_right_click(event.position, event.shift_pressed)
-			MOUSE_BUTTON_LEFT: _on_left_click(event.position, event.shift_pressed)
-	elif event is InputEventKey and event.pressed and not event.echo:
-		_on_key(event)
+	if event is InputEventMouseButton:
+		if event.pressed:
+			ctrl_tap = false
+		if event.button_index == MOUSE_BUTTON_MIDDLE:
+			camera_drag = event.pressed
+		elif event.pressed:
+			match event.button_index:
+				MOUSE_BUTTON_WHEEL_UP: camera_zoom = clampf(camera_zoom * 0.9, ZOOM_RANGE.x, ZOOM_RANGE.y)
+				MOUSE_BUTTON_WHEEL_DOWN: camera_zoom = clampf(camera_zoom * 1.1, ZOOM_RANGE.x, ZOOM_RANGE.y)
+				MOUSE_BUTTON_RIGHT: _on_right_click(event.position, event.shift_pressed)
+				MOUSE_BUTTON_LEFT: _on_left_click(event.position, event.shift_pressed)
+	elif event is InputEventMouseMotion and camera_drag:
+		camera_follow = false
+		camera_focus -= Vector3(event.relative.x, 0, event.relative.y) * CAMERA_DRAG_SCALE * camera_zoom
+	elif event is InputEventKey and not event.echo:
+		if event.pressed:
+			_on_key(event)
+		else:
+			_on_key_released(event)
 
 
 func _on_key(event: InputEventKey) -> void:
+	ctrl_tap = event.keycode == KEY_CTRL
 	if ABILITY_KEYS.has(event.keycode):
 		var slot: int = ABILITY_KEYS[event.keycode]
 		if event.ctrl_pressed:
@@ -290,16 +328,52 @@ func _on_key(event: InputEventKey) -> void:
 		return
 	match event.keycode:
 		KEY_A:
-			armed_attack_move = true
 			armed_ability = -1
+			if event.shift_pressed:
+				# Shift+A goes at once, toward the cursor.
+				armed_attack_move = false
+				_attack_move_at(get_viewport().get_mouse_position(), false)
+			else:
+				armed_attack_move = true
 		KEY_S: _count_order(session.submit_order(ORDER_STOP, 0, 0.0, 0.0, false))
 		KEY_H: _count_order(session.submit_order(ORDER_HOLD, 0, 0.0, 0.0, false))
 		KEY_B: _count_order(session.submit_order(ORDER_RECALL, 0, 0.0, 0.0, false))
 		KEY_Y: camera_follow = not camera_follow
-		KEY_SPACE: camera_follow = true
+		KEY_F1: _focus_hero()
+		KEY_F9: edge_pan = not edge_pan
+		KEY_SPACE:
+			space_held = true
+			space_view = camera_focus
+			space_follow = camera_follow
+			camera_follow = true
 		KEY_ESCAPE:
 			armed_attack_move = false
 			armed_ability = -1
+
+
+func _on_key_released(event: InputEventKey) -> void:
+	match event.keycode:
+		KEY_SPACE:
+			if space_held:
+				space_held = false
+				camera_follow = space_follow
+				if not space_follow:
+					camera_focus = space_view
+		KEY_CTRL:
+			if ctrl_tap:
+				_set_cursor_locked(not cursor_locked)
+			ctrl_tap = false
+
+
+func _set_cursor_locked(locked: bool) -> void:
+	cursor_locked = locked
+	Input.mouse_mode = Input.MOUSE_MODE_CONFINED if locked else Input.MOUSE_MODE_VISIBLE
+
+
+func _focus_hero() -> void:
+	var hero := session.owner_hero()
+	if hero != 0 and units.has(hero):
+		camera_focus = units[hero].root.position
 
 
 func _arm_ability(slot: int) -> void:
@@ -321,9 +395,49 @@ func _on_right_click(at: Vector2, queued: bool) -> void:
 	var target := _pick_unit(ground, true)
 	if target != 0:
 		_count_order(session.submit_order(ORDER_ATTACK, target, 0.0, 0.0, queued))
+		_mark_click(units[target].root.position if units.has(target) else ground, COLOR_CLICK_ATTACK)
 	else:
 		var world := _to_backend(ground)
 		_count_order(session.submit_order(ORDER_MOVE, 0, world.x, world.y, queued))
+		_mark_click(ground, COLOR_CLICK_MOVE)
+
+
+## Attack-move to a point, or straight at the enemy under the cursor.
+func _attack_move_at(at: Vector2, queued: bool) -> void:
+	var ground := _ground_point(at)
+	var target := _pick_unit(ground, true)
+	if target != 0:
+		_count_order(session.submit_order(ORDER_ATTACK, target, 0.0, 0.0, queued))
+		_mark_click(units[target].root.position if units.has(target) else ground, COLOR_CLICK_ATTACK)
+	else:
+		var world := _to_backend(ground)
+		_count_order(session.submit_order(ORDER_ATTACK_MOVE, 0, world.x, world.y, queued))
+		_mark_click(ground, COLOR_CLICK_ATTACK)
+
+
+## A ring that shrinks into the clicked spot, so every order shows where it went.
+func _mark_click(at: Vector3, color: Color) -> void:
+	var mesh := TorusMesh.new()
+	mesh.inner_radius = 0.42
+	mesh.outer_radius = 0.5
+	mesh.rings = 32
+	mesh.ring_segments = 4
+	var material := StandardMaterial3D.new()
+	material.albedo_color = color
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.no_depth_test = true
+	mesh.material = material
+	var ring := MeshInstance3D.new()
+	ring.mesh = mesh
+	ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	ring.position = Vector3(at.x, 0.05, at.z)
+	ring.scale = Vector3(1.0, 0.05, 1.0)
+	add_child(ring)
+	var tween := ring.create_tween()
+	tween.tween_property(ring, "scale", Vector3(0.3, 0.05, 0.3), CLICK_MARK_SECONDS)
+	tween.parallel().tween_property(material, "albedo_color:a", 0.0, CLICK_MARK_SECONDS).set_ease(Tween.EASE_IN)
+	tween.tween_callback(ring.queue_free)
 
 
 func _on_left_click(at: Vector2, queued: bool) -> void:
@@ -331,7 +445,7 @@ func _on_left_click(at: Vector2, queued: bool) -> void:
 	var world := _to_backend(ground)
 	if armed_attack_move:
 		armed_attack_move = false
-		_count_order(session.submit_order(ORDER_ATTACK_MOVE, 0, world.x, world.y, queued))
+		_attack_move_at(at, queued)
 	elif armed_ability >= 0:
 		var rows := session.ability_rows()
 		var slot := armed_ability
@@ -432,6 +546,7 @@ func _sync_units() -> void:
 				AttackFx.cast_ring(self, units[id].root.position, Color(0.55, 0.8, 1.0))
 	stats.max_units = maxi(stats.max_units, units.size())
 	_stack_plates()
+	_mark_occluded()
 	hud.minimap.dots = dots
 	hud.minimap.view_center = _to_backend(camera_focus)
 	hud.minimap.queue_redraw()
@@ -486,6 +601,29 @@ func _stack_plates() -> void:
 		placed.append(unit)
 
 
+## Turns on the x-ray copy of each hero standing behind a tower or building.
+func _mark_occluded() -> void:
+	var props: Array = []
+	for unit: Dictionary in units.values():
+		if unit.has("cover"):
+			props.append(unit)
+	for unit: Dictionary in units.values():
+		if not unit.get("xray", false):
+			continue
+		var at: Vector3 = unit.root.position
+		var hidden := false
+		for prop: Dictionary in props:
+			var gap: Vector3 = prop.root.position - at
+			var cover: Vector2 = prop.cover
+			# Nearer the camera is larger z.
+			if absf(gap.x) < cover.x and gap.z > 0.0 and gap.z < cover.y:
+				hidden = true
+				break
+		if hidden != unit.get("occluded", false):
+			unit.occluded = hidden
+			unit.sprite.set_occluded(hidden)
+
+
 func _relation_color(team: int, own: bool) -> Color:
 	if own:
 		return COLOR_OWN
@@ -511,6 +649,7 @@ func _spawn_unit(_id: int, kind: int, team: int, content: String, own: bool) -> 
 			sprite.play_slot("idle")
 			if kind == KIND_HERO:
 				sprite.enable_xray()
+				unit.xray = true
 				if own:
 					hud.set_portrait(sprite_id)
 			unit.sprite = sprite
@@ -531,6 +670,9 @@ func _spawn_unit(_id: int, kind: int, team: int, content: String, own: bool) -> 
 			var texture := UnitArt.prop_texture(prop)
 			if texture != null:
 				_add_prop(root, texture, height)
+				# The drawn subject is about 60% of the padded frame's width.
+				var half_width := texture.get_width() * height / (texture.get_height() * 0.6) * 0.3
+				unit.cover = Vector2(half_width, height * COVER_DEPTH)
 			else:
 				_add_part(root, Vector3(0.9, 2.3, 0.9), color.lerp(Color(0.5, 0.5, 0.5), 0.55))
 			unit.marker = _add_marker(root, height * 0.2, color)
@@ -692,7 +834,10 @@ func _add_bar_quad(root: Node3D, color: Color, height: float, width: float, thic
 
 
 func _update_unit(unit: Dictionary, rows: PackedFloat32Array, base: int) -> void:
-	unit.root.position = WorldXform.to_3d(rows[base], rows[base + 1])
+	var spot := WorldXform.to_3d(rows[base], rows[base + 1])
+	if not unit.has("spot") or unit.root.position.distance_to(spot) > SNAP_DISTANCE:
+		unit.root.position = spot
+	unit.spot = spot
 	unit.facing = rows[base + 2]
 	if unit.bar != null:
 		var maximum := rows[base + 4]
@@ -702,7 +847,8 @@ func _update_unit(unit: Dictionary, rows: PackedFloat32Array, base: int) -> void
 	var sprite: UnitSprite3D = unit.sprite
 	var dead := rows[base + 4] > 0.0 and rows[base + 3] <= 0.0
 	if not dead and rows[base + 3] < unit.get("hp", rows[base + 3]):
-		sprite.flash_hit()
+		if unit.kind == KIND_HERO:
+			sprite.flash_hit()
 		unit.damage = unit.get("damage", 0.0) + unit.hp - rows[base + 3]
 	unit.hp = rows[base + 3]
 	var now := Time.get_ticks_msec()
@@ -723,7 +869,9 @@ func _update_unit(unit: Dictionary, rows: PackedFloat32Array, base: int) -> void
 			sprite.play_slot("death")
 	if dead:
 		return
-	sprite.set_facing_right(cos(rows[base + 2]) >= 0.0)
+	var turn := cos(rows[base + 2])
+	if absf(turn) > FLIP_DEAD_COS:
+		sprite.set_facing_right(turn > 0.0)
 	var slot := "idle"
 	if int(rows[base + 11]) != 0:
 		slot = "attack"
@@ -746,6 +894,13 @@ func _update_unit(unit: Dictionary, rows: PackedFloat32Array, base: int) -> void
 			stats.walks[slot] = stats.walks.get(slot, 0) + 1
 		unit.slot = slot
 		sprite.play_slot(slot)
+
+
+func _smooth_units(delta: float) -> void:
+	var weight := 1.0 - exp(-SMOOTH_RATE * delta)
+	for unit: Dictionary in units.values():
+		if unit.has("spot"):
+			unit.root.position = unit.root.position.lerp(unit.spot, weight)
 
 
 func _on_action_finished(unit: Dictionary) -> void:
@@ -779,6 +934,9 @@ func _update_camera(delta: float) -> void:
 
 func _update_hud() -> void:
 	var armed := ""
+	var aiming := armed_attack_move or armed_ability >= 0
+	if aiming != (Input.get_current_cursor_shape() == Input.CURSOR_CROSS):
+		Input.set_default_cursor_shape(Input.CURSOR_CROSS if aiming else Input.CURSOR_ARROW)
 	if armed_attack_move:
 		armed = "攻擊移動：左鍵選位置"
 	elif armed_ability >= 0:

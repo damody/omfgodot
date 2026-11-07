@@ -156,30 +156,37 @@ impl OmSession {
                 self.tick = frame.tick;
                 let entities = rows(frame.entities, frame.entity_count);
                 let animations = rows(frame.animation_states, frame.animation_state_count);
-                self.ids = entities.iter().map(|row| row.entity.entity_id as i64).collect();
-                self.generations = entities.iter().map(|row| (row.entity.entity_id, row.entity.entity_gen)).collect();
-                self.units = entities
-                    .iter()
-                    .flat_map(|row| {
-                        let animation = animations.iter().find(|state| state.entity.entity_id == row.entity.entity_id);
-                        [
-                            row.position.x,
-                            row.position.y,
-                            row.facing_rad,
-                            row.hp,
-                            row.max_hp,
-                            row.kind as i32 as f32,
-                            row.team_id as f32,
-                            row.relation_flags as f32,
-                            row.catalog_id as f32,
-                            row.flags as f32,
-                            animation.map_or(0.0, |state| state.locomotion_state as i32 as f32),
-                            animation.map_or(0.0, |state| state.action_state as i32 as f32),
-                            animation.map_or(0.0, |state| state.phase_progress),
-                            row.catalog_kind as f32,
-                        ]
-                    })
-                    .collect();
+                // A frame without entities that is not a snapshot only carries events: the units stay,
+                // minus the ones it removes (as the UE world bridge reads it). Taking it as the full list
+                // emptied the world for a frame and rebuilt every unit on the next one.
+                if entities.is_empty() && frame.presentation_snapshot == 0 {
+                    self.forget_removed(rows(frame.removed_entities, frame.removed_entity_count));
+                } else {
+                    self.ids = entities.iter().map(|row| row.entity.entity_id as i64).collect();
+                    self.generations = entities.iter().map(|row| (row.entity.entity_id, row.entity.entity_gen)).collect();
+                    self.units = entities
+                        .iter()
+                        .flat_map(|row| {
+                            let animation = animations.iter().find(|state| state.entity.entity_id == row.entity.entity_id);
+                            [
+                                row.position.x,
+                                row.position.y,
+                                row.facing_rad,
+                                row.hp,
+                                row.max_hp,
+                                row.kind as i32 as f32,
+                                row.team_id as f32,
+                                row.relation_flags as f32,
+                                row.catalog_id as f32,
+                                row.flags as f32,
+                                animation.map_or(0.0, |state| state.locomotion_state as i32 as f32),
+                                animation.map_or(0.0, |state| state.action_state as i32 as f32),
+                                animation.map_or(0.0, |state| state.phase_progress),
+                                row.catalog_kind as f32,
+                            ]
+                        })
+                        .collect();
+                }
                 // Accumulates until `take_casts`: rendered ticks can be slower than frames.
                 // A frame repeats recent events; each cast counts once, by its cue instance. Pure
                 // presentation cues ride the same list and are not casts.
@@ -452,6 +459,27 @@ impl OmSession {
 }
 
 impl OmSession {
+    /// Drops the listed entities from the kept unit rows.
+    fn forget_removed(&mut self, removed: &[OmEntityRef]) {
+        if removed.is_empty() {
+            return;
+        }
+        let stride = Self::UNIT_STRIDE as usize;
+        let units = self.units.as_slice();
+        let mut ids = PackedInt64Array::new();
+        let mut kept = PackedFloat32Array::new();
+        for (index, id) in self.ids.as_slice().iter().enumerate() {
+            if removed.iter().any(|entity| entity.entity_id as i64 == *id) {
+                self.generations.remove(&(*id as u64));
+                continue;
+            }
+            ids.push(*id);
+            kept.extend_array(&PackedFloat32Array::from(&units[index * stride..(index + 1) * stride]));
+        }
+        self.ids = ids;
+        self.units = kept;
+    }
+
     fn command(&self, kind: OmInputCommandKind) -> OmInputCommand {
         // Every field defaults to zero: kind and target_kind have zero variants, the rest are plain data.
         let mut command: OmInputCommand = unsafe { std::mem::zeroed() };

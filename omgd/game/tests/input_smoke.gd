@@ -8,6 +8,7 @@ var step := 0
 var start_position := Vector3.ZERO
 var start_points := 0
 var failures := 0
+var focus_after_f1 := Vector3.ZERO
 
 
 func _process(delta: float) -> void:
@@ -54,6 +55,36 @@ func _process(delta: float) -> void:
 				_advance()
 		5:
 			if clock > 1.0:
+				# A then a left click on the ground: an attack-move there.
+				_key(KEY_A, false)
+				_advance()
+		6:
+			if clock > 0.2:
+				_report("attack_move_arm", view.armed_attack_move, "A armed attack-move")
+				start_position = _hero_position()
+				_mouse(view.camera.unproject_position(start_position + Vector3(-4.0, 0.0, 4.0)), MOUSE_BUTTON_LEFT)
+				_advance()
+		7:
+			if clock > 3.0:
+				var moved := start_position.distance_to(_hero_position())
+				_report("attack_move", moved > 1.0 and not view.armed_attack_move, "moved %.2f units" % moved)
+				view.camera_follow = false
+				view.camera_focus = _hero_position() + Vector3(8.0, 0.0, -6.0)
+				_key(KEY_F1, false)
+				_advance()
+		8:
+			if clock > 0.3:
+				# F1 lands where following the hero would; near a map edge both stop at the same clamp.
+				focus_after_f1 = view.camera_focus
+				view.camera_follow = true
+				_advance()
+		9:
+			if clock > 0.3:
+				var gap: float = focus_after_f1.distance_to(view.camera_focus)
+				_report("focus_hero", gap < 0.5, "F1 view %.2f units from the follow view" % gap)
+				_advance()
+		10:
+			if clock > 0.5:
 				print("INPUT_SMOKE_RESULT failures=", failures, " orders=", view.stats.orders, " refused=", view.stats.rejected)
 				view.end_smoke(failures)
 				set_process(false)
